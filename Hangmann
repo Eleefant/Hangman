@@ -1,0 +1,129 @@
+from random import choice
+
+def select_word():
+    with open("words.txt", "r", encoding='utf-8') as words:
+        word_list = words.readlines()
+        new_word = choice(word_list).strip()
+    return new_word
+
+def start_game():
+    print('Привет, давай сыграем в одну игру. Отгдай слово или умри!. Боишся? - уходи.')
+    vibor = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
+    count_start = 0
+    while count_start < 1:
+        if vibor == 'да':
+            search_letter()
+            count_start += 1
+        elif vibor == 'нет':
+            print('Пока')
+            break
+        else:
+            print('Введите корректное значение для продолжения')
+            vibor = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
+
+def draw_hanged_man():
+    hanged_man = [r"""
+  -----
+  |   |
+      |
+      |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+      |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+  |   |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+ /|   |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+ /|\  |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+ /|\  |
+ /    |
+      |
+      |
+-------
+""",
+        r"""
+  -----
+  |   |
+  O   |
+ /|\  |
+ / \  |
+      |
+-------
+""",
+    ]
+    return hanged_man
+drow_hm = draw_hanged_man()
+
+set_wrong_letter = set()
+
+def search_letter():
+    count_letter = 0
+    index_drow_hm = 0
+    select_word1 = select_word()
+    sel_word = list(select_word1)
+    unkown_word = list('_' * len(select_word1))
+    while count_letter < 6:
+        print(drow_hm[index_drow_hm])
+        print('Загаданное слово', ''.join(unkown_word))
+        letter = input('Введи букву на русском: ').lower()
+        if letter in set_wrong_letter:
+            print('Эта буква неправильная и ты ее уже вводил')
+            print('Список неправильных букв', set_wrong_letter)
+        elif len(letter) > 1:
+            print('Только одну букву')
+        elif letter in 'abcdefghijklmnopqrstuvwxyz1234567890':
+            print('На русском, пожалуйста')
+        elif letter not in sel_word:
+            set_wrong_letter.add(letter)
+            count_letter += 1
+            index_drow_hm += 1
+            print('Неверно! Количество ошибок', count_letter, 'из 6')
+            print('Список неправильных букв', set_wrong_letter)
+        elif letter in sel_word:
+            ind = sel_word.index(letter)
+            unkown_word[ind] = letter
+            print('Верно! Количество ошибок', count_letter, 'из 6')
+            print('Загаданное слово', ''.join(unkown_word))
+    else:
+        print(drow_hm[6], 'Покойся с миром')
+        print('Загаданное слово: ', sel_word)
+        select_word()
+        start_game()
+
+start_game()
