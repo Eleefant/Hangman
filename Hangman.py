@@ -1,7 +1,7 @@
 from random import choice
 
 def select_word():
-    with open("words.txt", "r", encoding='utf-8') as words:
+    with open("D:\PycharmProjects\Hangman\words.txt", "r", encoding='utf-8') as words:
         word_list = words.readlines()
         new_word = choice(word_list).strip()
     return new_word
