@@ -1,10 +1,12 @@
 from random import choice
 
+
 def select_word():
-    with open("D:\PycharmProjects\Hangman\words.txt", "r", encoding='utf-8') as words:
+    with open("words.txt", "r", encoding='utf-8') as words:
         word_list = words.readlines()
         new_word = choice(word_list).strip()
     return new_word
+
 
 def start_game():
     print('Привет, давай сыграем в одну игру. Отгдай слово или умри!. Боишся? - уходи.')
@@ -20,6 +22,7 @@ def start_game():
         else:
             print('Введите корректное значение для продолжения')
             vibor = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
+
 
 def draw_hanged_man():
     hanged_man = [r"""
@@ -88,9 +91,12 @@ def draw_hanged_man():
 """,
     ]
     return hanged_man
+
+
 draw_hm = draw_hanged_man()
 
 set_wrong_letter = set()
+
 
 def search_letter():
     count_letter = 0
@@ -136,5 +142,6 @@ def search_letter():
         print('Загаданное слово:', ''.join(select_word2))
         select_word()
         start_game()
+
 
 start_game()
