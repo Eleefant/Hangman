@@ -10,21 +10,21 @@ def select_word():
 
 def start_game():
     print('Привет, давай сыграем в одну игру. Отгдай слово или умри!. Боишся? - уходи.')
-    vibor = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
+    choice = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
     count_start = 0
     while count_start < 1:
-        if vibor == 'да':
+        if choice == 'да':
             search_letter()
             count_start += 1
-        elif vibor == 'нет':
+        elif choice == 'нет':
             print('Пока')
             break
         else:
             print('Введите корректное значение для продолжения')
-            vibor = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
+            choice = input('Введи "да" если начинаем или "нет" если уходишь ').lower()
 
 
-def draw_hanged_man():
+def draw_hanged_man(error_number):
     hanged_man = [r"""
   -----
   |   |
@@ -90,55 +90,53 @@ def draw_hanged_man():
 -------
 """,
     ]
-    return hanged_man
-
-
-draw_hm = draw_hanged_man()
-
-set_wrong_letter = set()
+    return hanged_man[error_number]
 
 
 def search_letter():
-    count_letter = 0
-    index_drow_hm = 0
-    select_word1 = select_word()
-    select_word2 = list(select_word1)
-    unkown_word = list('_' * len(select_word1))
-    while count_letter < 6:
+    set_use_letter = set()
+    count_errors = 0
+    error_number = 0
+    secret_word = select_word()
+    select_word2 = list(secret_word)
+    unkown_word = list('_' * len(secret_word))
+    while count_errors < 6:
         unkown_word2 = []
-        print(draw_hm[index_drow_hm])
+        print(draw_hanged_man(error_number))
         print('Загаданное слово', ''.join(unkown_word))
         letter = input('Введи букву на русском: ').lower()
-        if letter in set_wrong_letter:
-            print('Эта буква неправильная и ты ее уже вводил')
-            print('Список неправильных букв', set_wrong_letter)
+        if letter in set_use_letter:
+            print('Эту букву ты уже вводил')
+            print('Список использованных букв', set_use_letter)
         elif len(letter) > 1:
             print('Только одну букву')
-        elif letter in 'abcdefghijklmnopqrstuvwxyz1234567890':
+        elif letter not in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя':
             print('На русском, пожалуйста')
         elif letter not in select_word2:
-            set_wrong_letter.add(letter)
-            count_letter += 1
-            index_drow_hm += 1
-            print('Неверно! Количество ошибок', count_letter, 'из 6')
-            print('Список неправильных букв', set_wrong_letter)
+            set_use_letter.add(letter)
+            count_errors += 1
+            error_number += 1
+            print('Неверно! Количество ошибок', count_errors, 'из 6')
+            print('Список использованных букв', set_use_letter)
         elif letter in select_word2:
+            set_use_letter.add(letter)
+            print('Список использованных букв', set_use_letter)
             for i in range(len(select_word2)):
                 if letter == select_word2[i]:
                     unkown_word2 += letter
                 else:
                     unkown_word2 += unkown_word[i]
             unkown_word = unkown_word2
-            print('Верно! Количество ошибок', count_letter, 'из 6')
+            print('Верно! Количество ошибок', count_errors, 'из 6')
             print('Загаданное слово:', ''.join(unkown_word))
-            print('Список неправильных букв', set_wrong_letter)
+            print('Список использованных букв', set_use_letter)
             if select_word2 == unkown_word:
                 print('Поздравляю с победой!')
                 print('Ты угадал слово:', ''.join(select_word2))
                 select_word()
                 start_game()
     else:
-        print(draw_hm[6], 'Покойся с миром')
+        print(draw_hanged_man(6), 'Покойся с миром')
         print('Загаданное слово:', ''.join(select_word2))
         select_word()
         start_game()
